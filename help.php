@@ -35,9 +35,9 @@
         <p>If a player has two or more different opportunities to jump on a turn, they may choose the jump they prefer.</p>
         <p>If a player overlooks a jump or refuses it, the opponent can do one of three things:</p>
         <ol>
-            <li>Compel that player to take back their move and make the jump.</li>
-            <li>Remove from the board the piece that should have made the jump. (This is called the "Huff" and does not count as a regular move.)</li>
-            <li>Let the move stand as is.</li>
+            <li>Compel that player to take back their move and make the jump.</li><br>
+            <li>Remove from the board the piece that should have made the jump. (This is called the "Huff" and does not count as a regular move.)</li><br>
+            <li>Let the move stand as is.</li><br>
         </ol>
 
         <h2>King</h2>

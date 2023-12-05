@@ -1,19 +1,29 @@
 body {
+    margin: 0;
+    padding: 0;
     color: #636363;
     background-color: #fff;
 }
 header {
+    padding: 1rem;
+    width: 100%;
     color: #ffffff;
     background-color: #b1102b;
 }
 footer {
+    padding: 1rem;
+    width: 100%;
     color: #ffffff;
-    background-color: #13284c
+    background-color: #13284c;
 }
 
 h1, h2 {
     color: #000;
 }
+p {
+    margin: 10px;
+}
+
 a {
     color: inherit; 
     text-decoration: none;
@@ -32,9 +42,13 @@ a:visited {
     color: inherit;
 }
 
+strong {
+    color: #b1102b;
+}
+
 form {
     max-width: 300px;
-    margin:0 10 10 0;
+    margin: 10px;
 }
 
 label {
