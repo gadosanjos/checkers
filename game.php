@@ -3,7 +3,7 @@
 ?>
     <div>
 
-</div>
+    </div>
     <script src="js/createBoard.js"></script>
     
 <?php
