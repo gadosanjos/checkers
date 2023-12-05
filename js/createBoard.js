@@ -1,7 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
-    let body = document.querySelector('body');
-    let start = new CheckersGame(body);
-});
+
 
 class CheckersGame {
     constructor(container){
@@ -47,7 +44,7 @@ class Board {
         } else {
             td.className += 'light-field';
         }
-        td.setAttribute('data', row * 8 + col)
+        td.setAttribute('data', row * 8 + col);
         return td;
     }
 
@@ -58,4 +55,13 @@ class Board {
     appendTo(container){    
         container.append(this.section);
     }
+
+    populateTable(){
+        
+    }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    let body = document.querySelector('div');
+    let start = new CheckersGame(body);
+});
