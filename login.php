@@ -5,7 +5,9 @@
     <section>
         <h2>Login</h2>
         <form action="includes/login.inc.php" method="POST">
-            <input type="text" name="uid" placeholder="Username or Email...">
+            <label for="uid">Username:</label>
+            <input type="text" id="uid" name="uid" placeholder="Username or Email...">
+            <label for="pwd">Password:</label>
             <input type="password" name="pwd" placeholder="Password...">
             <button type="submit" name="submit">Login</button>
         </form>

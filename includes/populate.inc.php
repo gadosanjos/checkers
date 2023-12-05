@@ -26,7 +26,7 @@
     $username = "Gabe";
     $pwd = "123";
     $hashedPwd = password_hash($pwd, PASSWORD_DEFAULT);
-    $scoreBoard = 1001;
+    $scoreBoard = 999;
     $stmt->execute();
 
     $name = "Russo";
@@ -34,7 +34,7 @@
     $username = "Russo";
     $pwd = "123";
     $hashedPwd = password_hash($pwd, PASSWORD_DEFAULT);
-    $scoreBoard = 999;
+    $scoreBoard = 1001;
     $stmt->execute();
 
     echo "New records created successfully<br>";

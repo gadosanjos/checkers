@@ -43,6 +43,9 @@
         <h2>King</h2>
         <p>When a piece reaches one of the squares in the last row across the board from where it started, it is crowned a King by placing one of the previously captured pieces of the same color on it.</p>
         <p>A King can move and jump diagonally either forward or backward.</p>
+
+        <h2>Reference</h2>
+        <p><a href="https://www.hasbro.com/common/instruct/Checkers.PDF" target="_blank">Hasbro Checkers Rules</a></p>
     </section>
 
     

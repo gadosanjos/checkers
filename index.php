@@ -11,7 +11,7 @@
                     echo "<li>$username</li>";
                 } else {
                     echo "<h1>Checkers Game</h1>";
-                    echo "<p>Login to play!<br>No account? Just Sign up, it's fast and easy!<br>Sign up and participate in the Scoreboard!</p>";
+                    echo "<p>Login to play!<br>No account? Just Sign up, it's fast and easy!<br>Sign up and participate in the <a href ='leaderboard.php'>Scoreboard!</a></p>";
                 }
         ?>
     </section>
@@ -19,7 +19,7 @@
     <section>
 
     </section>
-    
+    <script src="js/firstSetup.js"></script>
 <?php
     include 'includes/footer.inc.php';
 ?>
