@@ -1,10 +1,10 @@
 <?php
     include 'includes/header.inc.php';
-    $_SESSION["player1pieces"] = 12;
-    $_SESSION["player2pieces"] = 12;
+    // $_SESSION["player1pieces"] = field.firstPlayer;
+    // $_SESSION["player2pieces"] = field.secondPlayer;
 ?>
 <?php
-    echo "<p>{$_SESSION['useruid']} pieces: {$_SESSION['player1pieces']}</p><p>Player 2 pieces: {$_SESSION['player1pieces']}</p>";
+    echo "<p>{$_SESSION['useruid']} pieces: <b id='firstPlayer'>0</b></p><p>Player 2 pieces:<b id='secondPlayer'>0</b></p>";
 ?>
     <div>
         <p>
@@ -25,9 +25,7 @@
         </p>
         <button type="button">Play</button>
     </div>
-
-
-    <script src="js/test3.js"></script>
+    <script src="js/createBoard.js" type="module"></script>
     
 <?php
     include 'includes/footer.inc.php';
