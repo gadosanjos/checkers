@@ -1,15 +1,17 @@
 import Board from "./Board.js";
 
 class Game {
-  constructor(size, container) {
+  constructor(size, container, playerColor, opponentColor, boardType) {
     this.container = container;
     this.board = new Board(size);
-    this.container.append(this.board.section);
-    this.start();
+    this.board.setColors(playerColor, opponentColor, boardType);
+    this.board.createBoard(() => {
+      this.start();
+    });
   }
 
   start() {
-    this.board.createBoard();
+    this.container.append(this.board.section);
   }
 }
 
