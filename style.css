@@ -63,7 +63,6 @@ input {
     width: 100%;
     padding: 8px;
     margin-bottom: 16px;
-    box-sizing: border-box;
 }
 
 button {
@@ -80,7 +79,6 @@ table {
     border-width: 5px;
 }
 td {
-    box-sizing: border-box;
     width: 50px !important;
     height: 50px !important;
 }
@@ -92,6 +90,8 @@ div {
 .board {
     background-image: url('images/lightWood.jpg');
     background-color: #fff;
+    display: flex;
+    flex-wrap: wrap;
     width: 400px;
     height: 400px;
     box-sizing: border-box;
@@ -112,6 +112,11 @@ div {
     background-color: #000;
 }
 .white-field {
+}
+.black-field {
+    background-color: #000;
+}
+.white-field {
     background-color: #fff;
 }
 .piece {
@@ -121,7 +126,6 @@ div {
     display: flex;
     justify-content: center;
     align-items: center;
-    box-sizing: border-box; 
     border: 2px solid white; 
 }
 .red {
@@ -135,4 +139,14 @@ div {
 }
 .white {
     background-color: white;
+}
+.selected-field{
+    border: 1px solid #b1102b;
+}
+.possible-move{
+    border: 1px solid #eaff00 ;
+}
+.impossible-move{
+    background-color: rgba(255, 0, 0, 0.681);
+    background-image: none;
 }
