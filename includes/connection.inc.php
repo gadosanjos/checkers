@@ -1,17 +1,17 @@
 <?php
     $servername = "localhost"; // default server name
-    $username = "animeKing"; // user name that you created
-    $password = "4VPnroTOC6wOU3mn"; // password that you created
+    $dbusername = "animeKing"; // user name that you created
+    $dbpassword = "4VPnroTOC6wOU3mn"; // password that you created
     $dbname = "checkersDB";
 
     // Create connection
-    $conn = new mysqli($servername, $username, $password);
+    $conn = new mysqli($servername, $dbusername, $dbpassword);
 
     // Check connection
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error ."<br>");
     } 
-    //echo "Connected successfully <br>";
+    echo "Connected successfully <br>";
     
     // Check if the database exists
     $result = $conn->query("SHOW DATABASES LIKE '$dbname'");
@@ -30,11 +30,10 @@
     // Creation of the database
     $sql = "CREATE DATABASE $dbname";
     if ($conn->query($sql) === TRUE) {
-        //echo "Database created successfully<br>";
+        echo "Database created successfully<br>";
     } else {
         echo "Error creating database: " . $conn->error ."<br>";
     }
 
     // close the connection
-    //echo "Disconnected successfully from connection.php <br>";
     $conn->close();

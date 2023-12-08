@@ -49,6 +49,16 @@ class Board {
   set currentPlayer(color) {
     this._currentPlayer = color;
   }
+
+  endGame() {
+    if (this.blackPiece === 0) {
+      alert('White wins!');
+      return true;
+    } else if (this.whitePiece === 0) {
+      alert('Black wins!');
+      return true;
+    }
+  }
 }
 
 export default Board;
