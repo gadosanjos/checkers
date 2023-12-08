@@ -94,8 +94,10 @@ div {
     flex-wrap: wrap;
     width: 400px;
     height: 400px;
+    box-sizing: border-box;
 }
 .field {
+    box-sizing: border-box;
     width: 50px;
     height: 50px;
     border: 1px solid #000;
@@ -105,6 +107,11 @@ div {
 }
 .light-field {
     background-image: url('images/lightWood.jpg');
+}
+.black-field {
+    background-color: #000;
+}
+.white-field {
 }
 .black-field {
     background-color: #000;
