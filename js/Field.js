@@ -1,25 +1,37 @@
 let selectedFieldData = false;
 
 class Field {
-  constructor(row, col, boardInstance) {
+  constructor(row, col, boardInstance, playerColor, opponentColor, boardType) {
     this.selectedField = false;
+    this.boardType = boardType;
     this.row = row;
     this.col = col;
     this.element = this.createField();
     this.piece = null;
-    this.board = boardInstance;
+    this._board = boardInstance;
     this.updateTable();
-    this.blackPiece = 12;
-    this.whitePiece = 12;
+    this.firstPlayer = 12;
+    this.secondPlayer = 12;
+    this.playerColor = playerColor;
+    this.opponentColor = opponentColor;
   }
 
   createField() {
+    let whiteField;
+    let blackField;
+    if (this.boardType === 'regular') {
+      whiteField = 'white-field';
+      blackField = 'black-field';
+    }else {
+      whiteField = 'light-field';
+      blackField = 'dark-field';
+    }
     const field = document.createElement('div');
     field.classList.add('field');
     if ((this.row + this.col) % 2) {
-      field.classList.add('dark-field');
+      field.classList.add(`${blackField}`);
     } else {
-      field.classList.add('light-field');
+      field.classList.add(`${whiteField}`);
     }
     field.dataset.row = this.row;
     field.dataset.col = this.col;
@@ -41,7 +53,6 @@ class Field {
         this.selectMove(e);
       }
     });
-
     return field;
   }
 
@@ -64,6 +75,9 @@ class Field {
     } else {
       this.element.innerHTML = '';
     }
+    
+    document.getElementById('firstPlayer').innerHTML = this.firstPlayer;
+    document.getElementById('secondPlayer').innerHTML = this.secondPlayer;
   }
 
   selectField(element) {
@@ -71,7 +85,7 @@ class Field {
       if (
         this.piece.row === parseInt(element.parentNode.dataset.row) &&
         this.piece.col === parseInt(element.parentNode.dataset.col) &&
-        this.board.currentPlayer === this.piece.color
+        this._board._currentPlayer === this.piece.color
       ) {
         selectedFieldData = {
           piece: this.piece,
@@ -106,19 +120,24 @@ class Field {
         this.selectedField.row = move.row;
         this.selectedField.col = move.col;
         this.setPiece(this.selectedField, move.row, move.col);
+
+        this.checkDame();
+        if(this._board._currentPlayer === this.playerColor){
+          this._board._currentPlayer = this.opponentColor;
+        }else{
+          this._board._currentPlayer = this.playerColor;
+        }
+        this.removeHighlight();
+        const firstPlayers = document.querySelectorAll(`.${this.playerColor}`);
+        this.firstPlayer = firstPlayers.length;
+        const secondPlayers = document.querySelectorAll(`.${this.opponentColor}`);
+        this.secondPlayer = secondPlayers.length;
         this.selectedField = false;
         selectedFieldData = false;
-        this.checkDame();
-        this.board.currentPlayer =
-          this.board.currentPlayer === 'black' ? 'white' : 'black';
-        this.removeHighlight();
-        const blackPieces = document.querySelectorAll('.black');
-        this.blackPiece = blackPieces.length;
-        const whitePieces = document.querySelectorAll('.white');
-        this.whitePiece = whitePieces.length;
-        console.log(this.blackPiece, this.whitePiece);
       }
     }
+    document.getElementById('firstPlayer').innerHTML = this.firstPlayer;
+    document.getElementById('secondPlayer').innerHTML = this.secondPlayer;
   }
 
   removeHighlight() {
@@ -141,10 +160,10 @@ class Field {
       (this.piece.row === 7 && this.piece.dame === false)
     ) {
       const row = parseInt(this.piece.row);
-      if (row === 7 && this.piece.color === 'black') {
+      if (row === 7 && this.piece.color === this._board.playerColor) {
         this.piece.isDame();
         this.updateTable();
-      } else if (row === 0 && this.piece.color === 'white') {
+      } else if (row === 0 && this.piece.color === this._board.opponentColor) {
         this.piece.isDame();
         this.updateTable();
       } else {

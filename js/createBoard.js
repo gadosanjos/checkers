@@ -29,20 +29,16 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
     }
 
-    // switch (selectedBoard) {
-    //   case 'regular':
-    //     lightType = 'white';
-    //     darkType = 'black';
-    //     break;
-    //   case 'wood':
-    //     lightType = 'light';
-    //     darkType = 'dark';
-    //     break;
-    //   default:
-    //     break;
-    // }
+    switch (selectedBoard) {
+      case 'regular':
+        break;
+      case 'wood':
+        break;
+      default:
+        break;
+    }
     let body = document.querySelector('div');
     body.innerHTML = '';
-    game = new Game(8, body);
+    game = new Game(8, body, selectedColor, opponentColor, selectedBoard);
   });
 });
