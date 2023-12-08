@@ -14,11 +14,11 @@
         <?php
             if(isset($_GET['error'])){
                 if($_GET['error'] == "emptyinput"){
-                    echo "<p>All fields must be filled!</p>";
+                    echo "<p><strong>All fields must be filled!</strong></p>";
                 } else if ($_GET['error'] == "wronglogin") {
-                    echo "<p>Wrong login!</p>";
+                    echo "<p><strong>Wrong login!</strong></p>";
                 } else if ($_GET['error'] == "wrongpassword") {
-                    echo "<p>Wrong password!</p>";
+                    echo "<p><strong>Wrong password!</strong></p>";
                 } 
             }
         ?>

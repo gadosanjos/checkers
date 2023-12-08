@@ -24,17 +24,17 @@
         <?php
             if(isset($_GET['error'])){
                 if($_GET['error'] == "emptyinput"){
-                    echo "<p>All fields must be filled!</p>";
+                    echo "<p><strong>All fields must be filled!</strong></p>";
                 } else if ($_GET['error'] == "invaliduid") {
-                    echo "<p>Username must only contain a-z A-Z 0-9!</p>";
+                    echo "<p><strong>Username must only contain a-z A-Z 0-9!</strong></p>";
                 } else if ($_GET['error'] == "invalidemail") {
-                    echo "<p>Invalid email!</p>";
+                    echo "<p><strong>Invalid email!</strong></p>";
                 } else if ($_GET['error'] == "passworddontmatch") {
-                    echo "<p>Passwords don't match!</p>";
+                    echo "<p><strong>Passwords don't match!</strong></p>";
                 } else if ($_GET['error'] == "usernametaken") {
-                    echo "<p>Username or Email already exists!</p>";
+                    echo "<p><strong>Username or Email already exists!</strong></p>";
                 } else if ($_GET['error'] == "none") {
-                    echo "<p>Congratulaions your account has been created, you can now login!</p>";
+                    echo "<p><strong>Congratulaions your account has been created, you can now login!</strong></p>";
                 }
             }
         ?>
