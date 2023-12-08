@@ -10,3 +10,6 @@
                 file_put_contents($setupFlagFile, 'Setup has been completed.');
             }
     }
+    if(isset($_GET['returnT'])){
+        echo true;
+    }

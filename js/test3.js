@@ -1,5 +1,6 @@
 let btn = document.querySelector('button');
 let game;
+let BOARD_SIZE = 8;
 
 btn.addEventListener('click', function () {
     let selectPiece = document.getElementById('selectPiece');
@@ -58,6 +59,7 @@ let gameBoard = [
 ['.', '.', '.', '.', '.', '.', '.', '.'], 
 ['.', '.', '.', '.', '.', '.', '.', '.']
 ];
+
 console.log(gameBoard);
 
 class CheckersGame{
@@ -77,10 +79,10 @@ class Board{
         const table = document.createElement('table');
         table.className = 'board';
 
-        for (let row = 0; row < 8; row++) {
+        for (let row = 0; row < BOARD_SIZE; row++) {
             const tr = document.createElement('tr');
             tr.setAttribute('id', boardRows[row]);
-            for (let col = 0; col < 8; col++) {
+            for (let col = 0; col < BOARD_SIZE; col++) {
                 const cell = this.createCell(row, col, lightType, darkType);
                 tr.appendChild(cell);
           }
@@ -109,12 +111,22 @@ class Board{
 
 class Player {
     constructor(playerName, pieceColor, first, board, isplayer1, player){
+        this.board = board;
+        this.isplayer1 = isplayer1
         this.pieceNum = 12;
         this.name = playerName;
         this.pieceColor = pieceColor;
         this.First = first;
         this.pieces = new Pieces(this.name, this.First, pieceColor, board, isplayer1, player);
-        
+    }
+    movePiece(move){
+        const piece = this.pieces.createPiece();
+
+        piece.className += " " + this.pieceColor;
+        piece.addEventListener('click', () => handlePieceClick(move.toRow, move.toCol, this.pieceColor, this.isplayer1, this.First))
+        this.board.rows[move.toRow].cells[move.toCol].append(piece);
+
+        this.board.rows[move.fromRow].cells[move.fromCol].innerHTML = "";
     }
 }
 
@@ -128,14 +140,14 @@ class Pieces {
         }
     }
     populateP1(pieceColor, first, playerObj) {
-        for (let row = 5; row < 8; row++) {
-            for (let col = 0; col < 8; col++) {
+        for (let row = 5; row < BOARD_SIZE; row++) {
+            for (let col = 0; col < BOARD_SIZE; col++) {
               if ((row + col) % 2 === 1) {
                 gameBoard[row][col] = 'o';
                 const piece = this.createPiece();
 
                 piece.className += " " + pieceColor;
-                piece.addEventListener('click', () => handlePieceClick(row, col, pieceColor, true, first, playerObj))
+                piece.addEventListener('click', () => handlePieceClick(row, col, pieceColor, true, first))
                 this.board.rows[row].cells[col].append(piece);
               }
             }
@@ -144,13 +156,13 @@ class Pieces {
     populateP2(pieceColor, first, playerObj){
 
         for (let row = 0; row < 3; row++) {
-            for (let col = 0; col < 8; col++) {
+            for (let col = 0; col < BOARD_SIZE; col++) {
               if ((row + col) % 2 === 1) {
                 gameBoard[row][col] = 'x';
                 const piece = this.createPiece();
 
                 piece.className += " " + pieceColor;
-                piece.addEventListener('click', () => handlePieceClick(row, col, pieceColor, false, first, playerObj))
+                piece.addEventListener('click', () => handlePieceClick(row, col, pieceColor, false, first))
                 this.board.rows[row].cells[col].append(piece);
                 }
             }
@@ -162,17 +174,16 @@ class Pieces {
         piece.className = 'piece';
         return piece;
     }
-
-    getCreatedPiece() {
-        return this.createdPiece;
-    }
 }
 
 function handleCellClick(row, col) {
     console.log(`Clicked on cell (${boardRows[row]}, ${boardCols[col]})`);
 }
-
-function handlePieceClick(row, col, pieceColor, player1, goesFirst, playerObj){
+let move;
+let move2;
+let valid; 
+let valid2;
+function handlePieceClick(row, col, pieceColor, player1, goesFirst){
     let brows = boardRows[row];
     let bcols = boardCols[col];
     let canGoUP = row-1;
@@ -192,12 +203,12 @@ function handlePieceClick(row, col, pieceColor, player1, goesFirst, playerObj){
                     possibleJump = document.querySelector("#"+boardRows[canGoUP]+"-B");
                     possibleJump.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
 
-                    checkersCols.innerHTML ="";
-
-                    possibleJump.addEventListener('click', (event) => {
-                        handleJumpClick(event.target, pieceColor);
-                    });
-                    possibleJump.removeEventListener('click', handleJumpClick);
+                    move = new Move(row, col, canGoUP, 1);
+                    //console.log(JSON.stringify(move));
+                    valid = makeMovePlayer1(move);
+                    if(valid){
+                        possibleJump.addEventListener('click', handleClick(move));  
+                    }
                     break;
                 case 'C':
                     console.log("you can go to " + boardRows[canGoUP] + " B or D");
@@ -206,13 +217,22 @@ function handlePieceClick(row, col, pieceColor, player1, goesFirst, playerObj){
                     possibleJump.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
                     possibleJump2.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
 
-                    possibleJump.addEventListener('click', (event) => {
-                        handleJumpClick(event.target, pieceColor, "#"+boardRows[canGoUP]+"-D");
-                    });
-                    possibleJump2.addEventListener('click', (event) => {
-                        handleJumpClick(event.target, pieceColor, "#"+boardRows[canGoUP]+"-B");
-                    });
-                    checkersCols.innerHTML ="";
+                    move = new Move(row, col, canGoUP, 1);
+                    move2 = new Move(row, col, canGoUP, 3);
+                    valid = makeMovePlayer1(move);
+                    valid2 = makeMovePlayer1(move2);
+                    if(valid && valid2) {
+                        possibleJump.addEventListener('click', handleClick2(move, possibleJump2)); 
+                        possibleJump2.addEventListener('click', handleClick2(move2, possibleJump));
+                        break;
+                    } else if (valid && !valid2) {
+                        console.log("valid && !valid2")
+                        possibleJump.addEventListener('click', handleClick2(move, possibleJump2));  
+                    } else if (!valid && valid2) {
+                        console.log("!valid && valid2")
+                        possibleJump2.addEventListener('click', handleClick2(move2, possibleJump));  
+                    }
+
                     break;
                 case 'E':
                     console.log("you can go to " + boardRows[canGoUP] + " D or F");
@@ -221,13 +241,22 @@ function handlePieceClick(row, col, pieceColor, player1, goesFirst, playerObj){
                     possibleJump.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
                     possibleJump2.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
 
-                    possibleJump.addEventListener('click', (event) => {
-                        handleJumpClick(event.target, pieceColor);
-                    });
-                    possibleJump2.addEventListener('click', (event) => {
-                        handleJumpClick(event.target, pieceColor);
-                    });
-                    checkersCols.innerHTML ="";
+                    move = new Move(row, col, canGoUP, 3);
+                    move2 = new Move(row, col, canGoUP, 5);
+                    valid = makeMovePlayer1(move);
+                    valid2 = makeMovePlayer1(move2);
+                    if(valid && valid2) {
+                        possibleJump.addEventListener('click', handleClick2(move, possibleJump2)); 
+                        possibleJump2.addEventListener('click', handleClick2(move2, possibleJump));
+                        break;
+                    } else if (valid && !valid2) {
+                        console.log("valid && !valid2")
+                        possibleJump.addEventListener('click', handleClick2(move, possibleJump2));  
+                    } else if (!valid && valid2) {
+                        console.log("!valid && valid2")
+                        possibleJump2.addEventListener('click', handleClick2(move2, possibleJump));  
+                    }
+
                     break;
                 case 'G':
                     console.log("you can go to " + boardRows[canGoUP] + " F or H");
@@ -236,13 +265,22 @@ function handlePieceClick(row, col, pieceColor, player1, goesFirst, playerObj){
                     possibleJump.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
                     possibleJump2.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
 
-                    possibleJump.addEventListener('click', (event) => {
-                        handleJumpClick(event.target, pieceColor);
-                    });
-                    possibleJump2.addEventListener('click', (event) => {
-                        handleJumpClick(event.target, pieceColor);
-                    });
-                    checkersCols.innerHTML ="";
+                    move = new Move(row, col, canGoUP, 5);
+                    move2 = new Move(row, col, canGoUP, 7);
+                    valid = makeMovePlayer1(move);
+                    valid2 = makeMovePlayer1(move2);
+                    if(valid && valid2) {
+                        possibleJump.addEventListener('click', handleClick2(move, possibleJump2)); 
+                        possibleJump2.addEventListener('click', handleClick2(move2, possibleJump));
+                        break;
+                    } else if (valid && !valid2) {
+                        console.log("valid && !valid2")
+                        possibleJump.addEventListener('click', handleClick2(move, possibleJump2));  
+                    } else if (!valid && valid2) {
+                        console.log("!valid && valid2")
+                        possibleJump2.addEventListener('click', handleClick2(move2, possibleJump));  
+                    }
+
                     break;
             }
         } else {
@@ -254,13 +292,23 @@ function handlePieceClick(row, col, pieceColor, player1, goesFirst, playerObj){
                     possibleJump.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
                     possibleJump2.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
 
-                    possibleJump.addEventListener('click', (event) => {
-                        handleJumpClick(event.target, pieceColor, possibleJump2);
-                    });
-                    possibleJump2.addEventListener('click', (event) => {
-                        handleJumpClick(event.target, pieceColor);
-                    });
-                    checkersCols.innerHTML ="";
+                    move = new Move(row, col, canGoUP, 0);
+                    move2 = new Move(row, col, canGoUP, 2);
+                    valid = makeMovePlayer1(move);
+                    valid2 = makeMovePlayer1(move2);
+                    if(valid && valid2) {
+                        possibleJump.addEventListener('click', handleClick2(move, possibleJump2)); 
+                        possibleJump2.addEventListener('click', handleClick2(move2, possibleJump));
+                        break;
+                    } else if (valid && !valid2) {
+                        console.log("valid && !valid2")
+                        possibleJump.addEventListener('click', handleClick2(move, possibleJump2));  
+                    } else if (!valid && valid2) {
+                        console.log("!valid && valid2")
+                        possibleJump2.addEventListener('click', handleClick2(move2, possibleJump));  
+                    }
+
+                    console.log("noooo");
                     break;
                 case 'D':
                     console.log("you can go to " + boardRows[--row] + " C or E");
@@ -269,13 +317,22 @@ function handlePieceClick(row, col, pieceColor, player1, goesFirst, playerObj){
                     possibleJump.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
                     possibleJump2.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
 
-                    possibleJump.addEventListener('click', (event) => {
-                        handleJumpClick(event.target, pieceColor);
-                    });
-                    possibleJump2.addEventListener('click', (event) => {
-                        handleJumpClick(event.target, pieceColor);
-                    });
-                    checkersCols.innerHTML ="";
+                    move = new Move(row, col, canGoUP, 2);
+                    move2 = new Move(row, col, canGoUP, 4);
+                    valid = makeMovePlayer1(move);
+                    valid2 = makeMovePlayer1(move2);
+                    if(valid && valid2) {
+                        possibleJump.addEventListener('click', handleClick2(move, possibleJump2)); 
+                        possibleJump2.addEventListener('click', handleClick2(move2, possibleJump));
+                        break;
+                    } else if (valid && !valid2) {
+                        console.log("valid && !valid2")
+                        possibleJump.addEventListener('click', handleClick2(move, possibleJump2));  
+                    } else if (!valid && valid2) {
+                        console.log("!valid && valid2")
+                        possibleJump2.addEventListener('click', handleClick2(move2, possibleJump));  
+                    }
+
                     break;
                 case 'F':
                     console.log("you can go " + boardRows[--row] + " to E or G");
@@ -284,25 +341,34 @@ function handlePieceClick(row, col, pieceColor, player1, goesFirst, playerObj){
                     possibleJump.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
                     possibleJump2.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
                     
-                    possibleJump.addEventListener('click', (event) => {
-                        handleJumpClick(event.target, pieceColor);
-                    });
-                    possibleJump2.addEventListener('click', (event) => {
-                        handleJumpClick(event.target, pieceColor);
-                    });
-                    checkersCols.innerHTML ="";
+                    move = new Move(row, col, canGoUP, 4);
+                    move2 = new Move(row, col, canGoUP, 6);
+                    valid = makeMovePlayer1(move);
+                    valid2 = makeMovePlayer1(move2);
+                    if(valid && valid2) {
+                        possibleJump.addEventListener('click', handleClick2(move, possibleJump2)); 
+                        possibleJump2.addEventListener('click', handleClick2(move2, possibleJump));
+                        break;
+                    } else if (valid && !valid2) {
+                        console.log("valid && !valid2")
+                        possibleJump.addEventListener('click', handleClick2(move, possibleJump2));  
+                    } else if (!valid && valid2) {
+                        console.log("!valid && valid2")
+                        possibleJump2.addEventListener('click', handleClick2(move2, possibleJump));  
+                    }
 
-                    possibleJump.addEventListener('click', jumpClick);
                     break;
                 case 'H':
                     console.log("you can go " + boardRows[--row] + " to G");
                     possibleJump = document.querySelector("#"+boardRows[canGoUP]+"-G");
                     possibleJump.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
 
-                    possibleJump.addEventListener('click', (event) => {
-                        handleJumpClick(event.target, pieceColor);
-                    });
-                    checkersCols.innerHTML ="";
+                    move = new Move(row, col, canGoUP, 6);
+                    //console.log(JSON.stringify(move));
+                    valid = makeMovePlayer1(move);
+                    if(valid){
+                        possibleJump.addEventListener('click', handleClick(move));  
+                    }
                     break;
             }
         }
@@ -313,13 +379,70 @@ function handlePieceClick(row, col, pieceColor, player1, goesFirst, playerObj){
     }
 }
 
-function handleJumpClick(element, color, possibleJump2) {
-    element.style.backgroundColor = '';
-    let piece = game.player1.pieces.createPiece();
-    piece.className += " " + color;
-    element.append(piece);
-    let notusedjump = document.querySelector(possibleJump2);
-    notusedjump.style.backgroundColor = '';
-    notusedjump.removeEventListener('click', handleJumpClick);
-    notusedjump.innerHTML = "";
+//Game handling functions
+function handleClick(move) {
+    // This is the actual event handler function
+    return function handleClick() {
+        // Remove the event listener after the click is handled if needed
+        this.removeEventListener('click', handleClick);
+        this.style.backgroundColor = '';
+        game.player1.movePiece(move);
+    };
+}
+
+function handleClick2(move, element) {
+    // This is the actual event handler function
+    return function handleClick2() {
+        // Remove the event listener after the click is handled if needed
+        this.removeEventListener('click', handleClick2);
+        this.style.backgroundColor = '';
+        element.removeEventListener('click', handleClick2);
+        element.style.backgroundColor = '';
+        game.player1.movePiece(move);
+
+    };
+}
+
+
+const Purayah = {
+    PLAYER1: 'PLAYER1',
+    PLAYER2: 'PLAYER2'
+};
+
+const Piece = {
+    EMPTY: 'EMPTY',
+    PLAYER1_PIECE: 'PLAYER1_PIECE',
+    PLAYER2_PIECE: 'PLAYER2_PIECE',
+    PLAYER1_KING: 'PLAYER1_KING',
+    PLAYER2_KING: 'PLAYER2_KING'
+}
+
+class Move{
+    constructor(fromRow, fromCol, toRow, toCol){
+        this.fromRow = fromRow;
+        this.fromCol = fromCol; 
+        this.toRow = toRow; 
+        this.toCol = toCol;
+    }
+}
+
+function makeMovePlayer1(move){
+    if(gameBoard[move.toRow][move.toCol] == "."){
+        gameBoard[move.fromRow][move.fromCol] = '.';
+        gameBoard[move.toRow][move.toCol] = "o";
+        console.log(gameBoard);
+        return true;
+    } else if(gameBoard[move.toRow][move.toCol] == "x") {
+        //JUMP CHECK
+        if(gameBoard[move.toRow-1][move.toCol+1] == "."){
+            gameBoard[move.fromRow][move.fromCol] = '.';
+            gameBoard[move.toRow-1][move.toCol+1] = "o";
+            gameBoard[move.toRow][move.toCol] == "."; //Player 2 looses a piece
+            console.log(gameBoard);
+            return true;
+        }  
+    } else {
+        console.log("invalid");
+        return false;
+    }
 }
