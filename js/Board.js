@@ -70,12 +70,13 @@ class Board {
     }
   }
 
-  endGame() {
+  endGame(firstPlayer, secondPlayer) {
     if (this.firstPlayer === 0) {
-      alert('Jogador 1 wins!');
+      alert('Player 1 wins!');
+      
       return true;
     } else if (this.secondPlayer === 0) {
-      alert('Jogador 2 wins!');
+      alert('Player 2 wins!');
       return true;
     }
   }

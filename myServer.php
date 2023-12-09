@@ -13,3 +13,10 @@
     if(isset($_GET['returnT'])){
         echo true;
     }
+    if(isset($_GET['player1Wins'])){
+        include_once 'databaseHandler.inc.php';
+        
+    }
+    if(isset($_GET['player2'])){
+        echo true;
+    }
