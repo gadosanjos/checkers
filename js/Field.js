@@ -1,6 +1,7 @@
 let selectedFieldData = false;
 let firstMoveMade = false;
 
+
 class Field {
   constructor(row, col, boardInstance, playerColor, opponentColor, boardType) {
     this.selectedField = false;
@@ -78,7 +79,6 @@ class Field {
     } else {
       this.element.innerHTML = '';
     }
-
     document.getElementById('firstPlayer').innerHTML = this.firstPlayer;
     document.getElementById('secondPlayer').innerHTML = this.secondPlayer;
   }

@@ -14,7 +14,6 @@ class Game {
   start() {
     this.container.append(this.board.section);
   }
-
 }
 
 export default Game;
