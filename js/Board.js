@@ -69,17 +69,17 @@ class Board {
       this._currentPlayer = this.playerColor;
     }
   }
-
   endGame(firstPlayer, secondPlayer) {
+    console.log(firstPlayer, secondPlayer)
     if (firstPlayer === 0) {
-      alert('Player 1 wins!');
+      alert('Player 1 wins!'); 
       let httpRqst = new XMLHttpRequest();
       httpRqst.open('GET', 'myServer.php?player1Wins=true', true);
       httpRqst.send();
-    
+      
       return true;
     } else if (secondPlayer === 0) {
-      alert('Player 2 wins!');
+      alert('Player 2 wins! you loose');
       return true;
     }
   }
