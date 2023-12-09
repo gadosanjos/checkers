@@ -3,8 +3,14 @@
     // $_SESSION["player1pieces"] = field.firstPlayer;
     // $_SESSION["player2pieces"] = field.secondPlayer;
 ?>
+
 <?php
-    echo "<p>{$_SESSION['useruid']} pieces: <b id='firstPlayer'>0</b></p><p>Player 2 pieces:<b id='secondPlayer'>0</b></p>";
+    echo "
+        <section id='gameInfo'>
+        <p>{$_SESSION['useruid']} pieces: <b id='firstPlayer'>0</b></p>
+        <p>Player 2 pieces:<b id='secondPlayer'>0</b></p>
+        </section>
+    ";
 ?>
     <div>
         <p>

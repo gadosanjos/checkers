@@ -69,7 +69,6 @@ class Board {
       this._currentPlayer = this.playerColor;
     }
   }
-
   endGame(firstPlayer, secondPlayer) {
     console.log(firstPlayer, secondPlayer)
     if (firstPlayer === 0) {

@@ -1,4 +1,6 @@
 let selectedFieldData = false;
+let firstMoveMade = false;
+
 
 class Field {
   constructor(row, col, boardInstance, playerColor, opponentColor, boardType) {
@@ -14,6 +16,8 @@ class Field {
     this.secondPlayer = 12;
     this.playerColor = playerColor;
     this.opponentColor = opponentColor;
+    this.initTime();
+    this.initPlayer();
   }
 
   createField() {
@@ -22,7 +26,7 @@ class Field {
     if (this.boardType === 'regular') {
       whiteField = 'white-field';
       blackField = 'black-field';
-    }else {
+    } else {
       whiteField = 'light-field';
       blackField = 'dark-field';
     }
@@ -75,7 +79,6 @@ class Field {
     } else {
       this.element.innerHTML = '';
     }
-    
     document.getElementById('firstPlayer').innerHTML = this.firstPlayer;
     document.getElementById('secondPlayer').innerHTML = this.secondPlayer;
   }
@@ -122,15 +125,22 @@ class Field {
         this.setPiece(this.selectedField, move.row, move.col);
 
         this.checkDame();
-        if(this._board._currentPlayer === this.playerColor){
+        if (this._board._currentPlayer === this.playerColor) {
           this._board._currentPlayer = this.opponentColor;
-        }else{
+        } else {
           this._board._currentPlayer = this.playerColor;
         }
+        this.initPlayer();
         this.removeHighlight();
+        if (!firstMoveMade) {
+          this.timer();
+        }
+        firstMoveMade = true;
         const firstPlayers = document.querySelectorAll(`.${this.playerColor}`);
         this.firstPlayer = firstPlayers.length;
-        const secondPlayers = document.querySelectorAll(`.${this.opponentColor}`);
+        const secondPlayers = document.querySelectorAll(
+          `.${this.opponentColor}`
+        );
         this.secondPlayer = secondPlayers.length;
         this.selectedField = false;
         selectedFieldData = false;
@@ -139,6 +149,7 @@ class Field {
     document.getElementById('firstPlayer').innerHTML = this.firstPlayer;
     document.getElementById('secondPlayer').innerHTML = this.secondPlayer;
     this._board.endGame(this.firstPlayer, this.secondPlayer);
+    this.updatePlayerHtml();
   }
 
   removeHighlight() {
@@ -173,6 +184,108 @@ class Field {
     } else {
       return false;
     }
+  }
+
+  initPlayer() {
+    let sectionInfo = document.getElementById('gameInfo');
+    let player = document.createElement('div');
+    player.className = 'player';
+    player.id = 'player';
+    let winningPlayer = 'Tie';
+    if (
+      document.querySelectorAll(`.${this.playerColor}`).length ===
+      document.querySelectorAll(`.${this.opponentColor}`).length
+    ) {
+      winningPlayer = 'Tie';
+    } else if (
+      document.querySelectorAll(`.${this.playerColor}`).length >
+      document.querySelectorAll(`.${this.opponentColor}`).length
+    ) {
+      winningPlayer = this.playerColor;
+    } else if (
+      document.querySelectorAll(`.${this.playerColor}`).length <
+      document.querySelectorAll(`.${this.opponentColor}`).length
+    ) {
+      winningPlayer = this.opponentColor;
+    }
+    player.innerHTML = `Turn: ${this._board._currentPlayer}                              
+    Winning: ${winningPlayer}`;
+    sectionInfo.appendChild(player);
+    if (document.getElementsByClassName('player').length > 1) {
+      sectionInfo.removeChild(player);
+    }
+  }
+
+  updatePlayerHtml() {
+    let player = document.getElementById('player');
+    player.innerHTML = `Turn: ${this._board._currentPlayer}                              
+      Winning: ${  this.firstPlayer > this.secondPlayer
+        ? this.playerColor
+        : this.firstPlayer < this.secondPlayer
+        ? this.opponentColor
+        : 'Tie'}`;
+  }
+
+  initTime() {
+    let sectionInfo = document.getElementById('gameInfo');
+    let timer = document.createElement('div');
+    timer.className = 'timer';
+    timer.id = 'timer';
+    timer.innerHTML = 'Move a piece to start the game!';
+    sectionInfo.appendChild(timer);
+    timer.dataset.time = '0';
+    if (document.getElementsByClassName('timer').length > 1) {
+      sectionInfo.removeChild(timer);
+    }
+  }
+
+  timer() {
+    let timer = document.getElementById('timer');
+    let player = document.getElementById('player');
+    const updateTimer = () => {
+      let winningPlayer = 'Tie';
+      if (
+        document.querySelectorAll(`.${this.playerColor}`).length ===
+        document.querySelectorAll(`.${this.opponentColor}`).length
+      ) {
+        winningPlayer = 'Tie';
+      } else if (
+        document.querySelectorAll(`.${this.playerColor}`).length >
+        document.querySelectorAll(`.${this.opponentColor}`).length
+      ) {
+        winningPlayer = this.playerColor;
+      } else if (
+        document.querySelectorAll(`.${this.playerColor}`).length <
+        document.querySelectorAll(`.${this.opponentColor}`).length
+      ) {
+        winningPlayer = this.opponentColor;
+      }
+      if (this.firstPlayer === 0 || this.secondPlayer === 0) {
+        let timeInSeconds = parseInt(timer.dataset.time);
+        let formattedTime = this.formatTime(timeInSeconds);
+        timer.innerHTML = `FINISHED IN ${formattedTime}`;
+        return;
+      }
+      timer.dataset.time = parseInt(timer.dataset.time) + 1;
+      let formattedTime = this.formatTime(timer.dataset.time);
+      timer.innerHTML = `Game time: ${formattedTime}`;
+      player.innerHTML = `Turn: ${this._board._currentPlayer}                              
+      Winning: ${winningPlayer}`;
+    };
+    updateTimer();
+    setInterval(updateTimer, 1000);
+  }
+
+  formatTime(seconds) {
+    let hours = Math.floor(seconds / 3600);
+    let minutes = Math.floor((seconds % 3600) / 60);
+    let remainingSeconds = seconds % 60;
+    hours = hours < 10 ? `0${hours}` : hours;
+    minutes = minutes < 10 ? `0${minutes}` : minutes;
+    remainingSeconds =
+      remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
+
+    return `${hours}:${minutes}:${remainingSeconds}`;
   }
 }
 

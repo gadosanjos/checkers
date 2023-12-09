@@ -1,4 +1,5 @@
-import Board from "./Board.js";
+import Board from './Board.js';
+import Field from './Field.js';
 
 class Game {
   constructor(size, container, playerColor, opponentColor, boardType) {
