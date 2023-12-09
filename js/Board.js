@@ -71,11 +71,14 @@ class Board {
   }
 
   endGame(firstPlayer, secondPlayer) {
-    if (this.firstPlayer === 0) {
+    if (firstPlayer === 0) {
       alert('Player 1 wins!');
-      
+      let httpRqst = new XMLHttpRequest();
+      httpRqst.open('GET', 'myServer.php?player1Wins=true', true);
+      httpRqst.send();
+    
       return true;
-    } else if (this.secondPlayer === 0) {
+    } else if (secondPlayer === 0) {
       alert('Player 2 wins!');
       return true;
     }
