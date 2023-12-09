@@ -138,6 +138,7 @@ class Field {
     }
     document.getElementById('firstPlayer').innerHTML = this.firstPlayer;
     document.getElementById('secondPlayer').innerHTML = this.secondPlayer;
+    this._board.endGame(this.firstPlayer, this.secondPlayer);
   }
 
   removeHighlight() {
