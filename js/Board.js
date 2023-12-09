@@ -70,7 +70,7 @@ class Board {
     }
   }
 
-  endGame() {
+  endGame(firstPlayer, secondPlayer) {
     if (this.firstPlayer === 0) {
       alert('Player 1 wins!');
       
